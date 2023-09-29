@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home Page</title>
+    <!-- Your CSS styles here -->
+</head>
+<body>
+
+<section>
+    <nav class="nav">
+        <div class="container">
+            <div class="first_half">
+                <img src="{% static 'images/logo.png' %}" alt="logo">
+            </div>
+            <div class="second_half">
+                <div class="second_half">
+                    <ul>
+                        <li><a href="{% url 'addpost' %}"><button>Add Post</button></a></li>
+                        <li><a href="{% url  'logout' %}"> <button>Logout</button></a></li>
+
+                        {% if profile_details %}
+                            <li><a href="{% url  'profile' %}">
+                                <img src="{{ profile_details.profile_picture.url  }}" alt="profile"></a></li>
+                        {% else %}
+                            <li><a><img src="{% static 'images/default_profile.png' %}" alt="default profile"></a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+</section>
+
+<section>
+    {% if user_post %}
+        {% for item in user_post %}
+            <div class="post_container">
+                <div class="post">
+                    <div class="postbox">
+                        <div><img class="postlogo" src="{{ profile_details.profile_picture.url  }}" alt="profile"></div>
+                        <div style="display: flex;">
+                            <div>
+                                <strong style="font-size: 30px; margin-left: 15px;">
+                                {{ user_profile.first_name }} {{ user_profile.last_name }}</strong>
+                            </div>
+                            <div style="">
+                                <p style="margin-left: 200px; ">{{ item.created_at }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img class="postimg" src="{{ item.photo.url }}" alt="Post Image">
+                        <p><strong>Description:</strong> {{ item.description }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="text-align: center; font-weight: bold; padding-top: 50px;">No posts available</p>
+    {% endif %}
+</section>
+
+</body>
+</html>

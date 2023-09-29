@@ -1,0 +1,179 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home Page</title>
+	<style type="text/css">
+.nav {
+    background-color: #333; /* Background color for the navigation bar */
+    color: #fff; /* Text color */
+    padding: 10px 0; /* Padding for top and bottom */
+}
+
+.container {
+    display: flex; /* Enable flex layout */
+    justify-content: space-between; /* Space out the children evenly */
+    align-items: center; /* Center items vertically */
+    max-width: 1200px; /* Set a max width for the container */
+    margin: 0 auto; /* Center the container horizontally */
+}
+
+/* Style for the logo */
+.first_half img {
+    width: 100px; /* Adjust the width of the logo */
+    height: auto; /* Maintain aspect ratio */
+}
+
+/* Style for the list (ul) inside the second half */
+.second_half ul {
+    list-style: none; /* Remove default list styles */
+    padding: 0; /* Remove list padding */
+    display: flex; /* Enable flex layout for list items */
+    align-items: center; /* Center items vertically */
+}
+
+/* Style for list items (li) */
+.second_half li {
+    margin-right: 20px; /* Add spacing between list items */
+}
+
+/* Style for the buttons inside list items */
+.second_half li button {
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Button text color */
+    border: none; /* Remove button border */
+    padding: 10px 20px; /* Adjust button padding */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* Remove underlines on the link */
+    cursor: pointer;
+}
+
+/* Style for the profile image */
+.second_half img {
+    width: 125px; /* Adjust the width of the profile image */
+    height: 110px; /* Adjust the height of the profile image */
+    border-radius: 50%; /* Make it a circle */
+    margin-right: -50px;
+}
+.container_2{
+    display: flex;
+    justify-content:space-around;
+    padding-top: 10px;
+    padding-bottom: 50px;
+}
+
+.col2{
+    width:500px;
+}
+.col1 img{
+    border-radius: 60%;
+    background-color: green;
+    height: 200px;
+    width:200px;
+    border:2px solid black;
+    padding: 5px;
+}
+.post_container{
+    display: flex;
+    justify-content: center;
+    /*height: 300px;*/
+    margin-top: 20px;
+}
+.post {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+}
+
+.postimg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+    height:400px;
+    
+}
+
+.post p {
+    margin: 10px 0;
+}
+.postlogo{
+    border:2px solid black;
+    height:50px;
+    width: 50px;
+    border-radius: 100%;
+}
+.postbox{
+    height: 50px;
+    display: flex;
+
+}
+
+
+</style>
+</head>
+
+<body>
+
+    <section>
+    	<nav class="nav">
+    		<div class="container">
+    			<div class="first_half">
+    				<img src="{% static 'images/logo.png' %}" alt="logo">
+    			</div>
+    			<div class="second_half">
+    				<div class="second_half">
+    					<ul>
+    						<li><a href="{% url 'addpost' %}"><button>Add Post</button></a></li>
+    						<li><a href="{% url  'logout' %}"> <button>logout</button></a></li>
+    						
+                            {% if profile_details %}
+                            <li><a href="{% url  'profile' %}">
+                                <img src="{{ profile_details.profile_picture.url  }}" alt="profile"></a></li>
+                            {% else %}
+                               <li><a href="{% url 'editprofile'  %}"><img src="{% static 'images/profile.png' %}" alt=" default profile"></a></li>
+                            {% endif %}
+    					</ul>
+    				</div>
+    			</div>
+    		</div>
+    	</nav>
+    </section>
+
+    <section>
+	{% if allpost %}
+                {% for i in allpost %}
+                <div class="post_container">
+                     <div class="post">
+
+                        <div class="postbox">
+                            <div><img class="postlogo" src="{{ i.profile_picture.url  }}" alt="profile">
+                            </div>
+                            <div style="display: flex;">
+                                <div>
+                                    <strong style="font-size: 30px; margin-left: 15px;">
+                                    {{ i.user.first_name }} <space> {{i.user.last_name}}</strong>
+                                </div>
+                                <div style="">
+                                    <p style="margin-left: 200px; ">{{i.created_at}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div>
+                            <img class="postimg"src="{{ i.photo.url }}" alt="Post Image">
+                            <p><strong>Description:</strong> {{ i.description }}</p>
+                        </div>
+                    </div>
+                        
+                </div>  
+                {% endfor %}
+            {% else %}   
+                <P style="text-align: center; font-weight: bold;padding-top: 50px;">NO posts available</P>
+            {% endif %}
+        
+    </section>
+	
+</body>
+</html>

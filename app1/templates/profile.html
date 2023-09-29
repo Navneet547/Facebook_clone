@@ -1,0 +1,209 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>profile Page</title>
+	<style type="text/css">
+.nav {
+    background-color: #333; /* Background color for the navigation bar */
+    color: #fff; /* Text color */
+    padding: 10px 0; /* Padding for top and bottom */
+}
+
+.container {
+    display: flex; /* Enable flex layout */
+    justify-content: space-between; /* Space out the children evenly */
+    align-items: center; /* Center items vertically */
+    max-width: 1200px; /* Set a max width for the container */
+    margin: 0 auto; /* Center the container horizontally */
+}
+
+/* Style for the logo */
+.first_half img {
+    width: 100px; /* Adjust the width of the logo */
+    height: auto; /* Maintain aspect ratio */
+}
+
+/* Style for the list (ul) inside the second half */
+.second_half ul {
+    list-style: none; /* Remove default list styles */
+    padding: 0; /* Remove list padding */
+    display: flex; /* Enable flex layout for list items */
+    align-items: center; /* Center items vertically */
+}
+
+/* Style for list items (li) */
+.second_half li {
+    margin-right: 20px; /* Add spacing between list items */
+}
+
+/* Style for the buttons inside list items */
+.second_half li button {
+    background-color: #007bff; /* Button background color */
+    color: #fff; /* Button text color */
+    border: none; /* Remove button border */
+    padding: 10px 20px; /* Adjust button padding */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* Remove underlines on the link */
+    cursor: pointer;
+}
+
+/* Style for the profile image */
+.second_half img {
+    width: 40px; /* Adjust the width of the profile image */
+    height: 40px; /* Adjust the height of the profile image */
+    border-radius: 50%; /* Make it a circle */
+}
+.container_2{
+	display: flex;
+	justify-content:space-around;
+	padding-top: 10px;
+	padding-bottom: 50px;
+}
+
+.col2{
+	width:500px;
+}
+.col1 img{
+	border-radius: 60%;
+	background-color: green;
+	height: 200px;
+	width:200px;
+	border:2px solid black;
+	padding: 5px;
+}
+.post_container{
+	display: flex;
+	justify-content: center;
+	/*height: 300px;*/
+}
+.post {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+}
+
+.postimg {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+    height:400px;
+    
+}
+
+.post p {
+    margin: 10px 0;
+}
+.postlogo{
+	border:2px solid black;
+	height:50px;
+	width: 50px;
+	border-radius: 100%;
+}
+.postbox{
+	height: 50px;
+	display: flex;
+
+}
+
+</style>
+
+</head>
+<body>
+
+	<!-- #.....................................Navbar section.............................# -->
+	<!-- #................................................................................# -->
+	
+	<nav class="nav">
+		<div class="container">
+			<div class="first_half">
+				<img src="{% static 'images/logo.png' %}" alt="logo">
+			</div>
+			<div class="second_half">
+				<div class="second_half">
+					<ul>
+						<li><a href="{% url 'home' %}" style="color:red;">Home</a></li>
+						<li><a href="{% url 'addpost' %}"><button>Add Post</button></a></li>
+						<li><a href="{% url 'editprofile'  %}"><button>Edit profile</button></a></li>
+						<li><a href="{% url  'logout' %}" > <button >logout</button></a></li>
+						<!-- <li><a href="{% url  'profile' %}"> <img src="{% static 'images/profile.png' %}" alt="profile"></li></a> -->
+					</ul>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<!-- #..........................profile information section..........................# -->
+	<!-- #................................................................................# -->
+
+	<section>
+		<div class="container_2">
+			{% csrf_token %}
+			{%  if profile_details %}
+				<div class="col1"  ><img src="{{ profile_details.profile_picture.url }}" alt="profile"></div>
+				<div class="col2">
+				{% if user_profile %}
+					<h1 style="font-size: 50px;margin-bottom: -15px;">{{user_profile.first_name}} <space>{{user_profile.last_name}} </h1>
+						<h3>{{user_profile.username}}</h3>
+					<h3>{{profile_details.bio}}</h3>
+					<h3>{{profile_details.location}}</h3>
+					<!-- <img src="{{ profile_details.profile_picture.url }}" alt="Post Image"> -->
+				{% else %}
+					<p>Data is not found</p>
+				{% endif %}
+				</div>
+			{% else %}
+					<p>No Data Available,  Please edit your profile</p>
+			{% endif %}
+		</div>
+	</section>
+
+	<!-- #..........................Post Information section..............................# -->
+	<!-- #................................................................................# -->
+
+	<section>
+
+			{% if user_post %}
+				{% for item in user_post %}
+		 		<div class="post_container">
+			   		 <div class="post">
+
+			        	<div class="postbox">
+			        		<div><img class="postlogo" src="{{ profile_details.profile_picture.url  }}" alt="profile">
+			        		</div>
+			        		<div style="display: flex;">
+			        			<div>
+					        		<strong style="font-size: 30px; margin-left: 15px;">
+					        		{{ user_profile.first_name }} <space> {{user_profile.last_name}}</strong>
+			        			</div>
+				        		<div style="">
+				        			<p style="margin-left: 200px; ">{{item.created_at}}</p>
+				        		</div>
+			        		</div>
+
+			        	</div>
+			        	<div>
+				        	<img class="postimg"src="{{ item.photo.url }}" alt="Post Image">
+				        	<p><strong>Description:</strong> {{ item.description }}</p>
+				        </div>
+			        	<div>
+			        		<a href="#"><button>Like</button></a>
+			    			<a href="#"><button>Comment</button></a>
+			    			<a href="#"><button>Share</button></a>
+			    			<a href="{% url 'deletepost' id=item.id  %}"><button>Delete</button></a>
+			    		</div>
+			    	</div>
+			    		
+		   		</div>	
+		   		{% endfor %}
+		   	{% else %}	 
+		   	<P>NO posts available</P>
+		   	{% endif %}
+		
+	</section>
+	
+	
+</body>
+</html>
